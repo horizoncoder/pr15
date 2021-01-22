@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function(){
     const formAnswers = document.querySelector('#formAnswers');
     const nextButton = document.querySelector('#next');
     const previousButton = document.querySelector('#prev');
+    const sendButton = document.querySelector('#send');
     const questions = [
         {
             question: "Какого цвета бургер вы хотите?",
@@ -84,16 +85,17 @@ document.addEventListener('DOMContentLoaded', function(){
     ];
 
     const playTest = () => {
+        const finalAnswers = [];
 
         renderAnswers = (index) => {
 
             questions[index].answers.forEach((answer) => {
                 const answerItem = document.createElement('div');
 
-                answerItem.classList.add('answers-item', 'd-flex', 'flex-column');
+                answerItem.classList.add('answers-item', 'd-flex', 'justify-content-center');
 
                 answerItem.innerHTML = `
-                    <input type="${questions[index].type}" id="${answer.title}" name="answer" class="d-none">
+                    <input type="${questions[index].type}" id="${answer.title}" name="answer" class="d-none" value = "${answer.title}">
                     <label for="${answer.title}" class="d-flex flex-column justify-content-between">
                         <img class="answerImg" src="${answer.url}" alt="burger">
                         <span>${answer.title}</span>
@@ -105,29 +107,72 @@ document.addEventListener('DOMContentLoaded', function(){
 
         const renderQuestions = (indexQuestion) => {
             formAnswers.innerHTML = ``;
-            if(indexQuestion == 0){
-                previousButton.classList.add('hidden');
+
+            switch(NumberQuestion){
+                case 0:
+                    questionTitle.textContent = `${questions[indexQuestion].question}`;
+                    renderAnswers(indexQuestion);
+                    nextButton.classList.remove('d-none');
+                    sendButton.classList.add('d-none');
+                    previousButton.classList.add('d-none');
+                    break;
+                case questions.length:
+                    nextButton.classList.add('d-none');
+                    previousButton.classList.add('d-none');
+                    sendButton.classList.remove('d-none');
+                    formAnswers.innerHTML = `
+                    <label for="numberPhone" class="form-label">Enter your phone number</label>
+                    <input type="phone" class="form-control" id="numberPhone">`;
+                    break;
+                case questions.length + 1:
+                    formAnswers.textContent = "Thanks";
+                    setTimeout(() => {
+                        ModalBlock.classList.remove('d-block');
+                    },2000)
+                    break;
+                default:
+                    questionTitle.textContent = `${questions[indexQuestion].question}`;
+                    renderAnswers(indexQuestion);
+                    nextButton.classList.remove('d-none');
+                    previousButton.classList.remove('d-none');
+                    sendButton.classList.add('d-none');
             }
-            else if(indexQuestion == questions.length - 1){
-                nextButton.classList.add('hidden');
-            }
-            else{
-                previousButton.classList.remove('hidden')
-                nextButton.classList.remove('hidden')
-            }
-            questionTitle.textContent = `${questions[indexQuestion].question}`;
-            renderAnswers(indexQuestion);
         }
         let NumberQuestion = 0;
         renderQuestions(NumberQuestion);
 
+        const checkAnswer = () => {
+            const obj = {};
+            const inputs = [...formAnswers.elements].filter((input) => input.checked || input.id == 'numberPhone');
+
+            inputs.forEach((input, index) => {
+                if(NumberQuestion >= 0 && NumberQuestion <= questions.length - 1){
+                    obj[`${index}${questions[NumberQuestion].question}`] = input.value;
+                } else if(NumberQuestion === questions.length) {
+                    obj["Phone number"] = input.value;
+                }
+                
+
+            })
+
+            finalAnswers.push(obj);
+        }
+
         nextButton.onclick = () => {
+            checkAnswer();
             NumberQuestion++;
             renderQuestions(NumberQuestion);
         }
 
         previousButton.onclick = () => {
             NumberQuestion--;
+            renderQuestions(NumberQuestion);
+        }
+
+        sendButton.onclick = () => {
+            checkAnswer();
+            console.log(finalAnswers);
+            NumberQuestion++;
             renderQuestions(NumberQuestion);
         }
     }
