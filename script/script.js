@@ -9,82 +9,31 @@ document.addEventListener('DOMContentLoaded', function(){
     const nextButton = document.querySelector('#next');
     const previousButton = document.querySelector('#prev');
     const sendButton = document.querySelector('#send');
-    const questions = [
-        {
-            question: "Какого цвета бургер вы хотите?",
-            answers: [
-                {
-                    title: 'Стандарт',
-                    url: './image/burger.png'
-                },
-                {
-                    title: 'Черный',
-                    url: './image/burgerBlack.png'
-                }
-            ],
-            type: 'radio'
-        },
-        {
-            question: "Из какого мяса котлета?",
-            answers: [
-                {
-                    title: 'Курица',
-                    url: './image/chickenMeat.png'
-                },
-                {
-                    title: 'Говядина',
-                    url: './image/beefMeat.png'
-                },
-                {
-                    title: 'Свинина',
-                    url: './image/porkMeat.png'
-                }
-            ],
-            type: 'radio'
-        },
-        {
-            question: "Дополнительные ингредиенты?",
-            answers: [
-                {
-                    title: 'Помидор',
-                    url: './image/tomato.png'
-                },
-                {
-                    title: 'Огурец',
-                    url: './image/cucumber.png'
-                },
-                {
-                    title: 'Салат',
-                    url: './image/salad.png'
-                },
-                {
-                    title: 'Лук',
-                    url: './image/onion.png'
-                }
-            ],
-            type: 'checkbox'
-        },
-        {
-            question: "Добавить соус?",
-            answers: [
-                {
-                    title: 'Чесночный',
-                    url: './image/sauce1.png'
-                },
-                {
-                    title: 'Томатный',
-                    url: './image/sauce2.png'
-                },
-                {
-                    title: 'Горчичный',
-                    url: './image/sauce3.png'
-                }
-            ],
-            type: 'radio'
-        }
-    ];
 
-    const playTest = () => {
+    const firebaseConfig = {
+        apiKey: "AIzaSyBmM7e1CS7pg3Urg-MlfI_3rbBpoxK7hDM",
+        authDomain: "pr15web.firebaseapp.com",
+        databaseURL: "https://pr15web-default-rtdb.firebaseio.com",
+        projectId: "pr15web",
+        storageBucket: "pr15web.appspot.com",
+        messagingSenderId: "684291786360",
+        appId: "1:684291786360:web:c8e80a6c8c549587a44f8d",
+        measurementId: "G-VNQSYSVG26"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+    const getData = () => {
+        formAnswers.textContent = "LOAD";
+
+        nextButton.classList.remove('d-none');
+        sendButton.classList.add('d-none');
+        previousButton.classList.add('d-none');
+
+        firebase.database().ref().child('questions').once('value')
+                .then(snap => playTest(snap.val()));
+    }
+    const playTest = (questions) => {
         const finalAnswers = [];
 
         renderAnswers = (index) => {
@@ -171,15 +120,19 @@ document.addEventListener('DOMContentLoaded', function(){
 
         sendButton.onclick = () => {
             checkAnswer();
-            console.log(finalAnswers);
             NumberQuestion++;
             renderQuestions(NumberQuestion);
+            firebase
+            .database()
+            .ref()
+            .child('contacts')
+            .push(finalAnswers);
         }
     }
 
     btnOpenModal.addEventListener('click', () => {
         ModalBlock.classList.add("d-block");
-        playTest();
+        getData();
     });
 
     closeModal.addEventListener('click', () => {
