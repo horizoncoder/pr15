@@ -11,14 +11,14 @@ document.addEventListener('DOMContentLoaded', function(){
     const sendButton = document.querySelector('#send');
 
     const firebaseConfig = {
-        apiKey: "AIzaSyBmM7e1CS7pg3Urg-MlfI_3rbBpoxK7hDM",
-        authDomain: "pr15web.firebaseapp.com",
-        databaseURL: "https://pr15web-default-rtdb.firebaseio.com",
-        projectId: "pr15web",
-        storageBucket: "pr15web.appspot.com",
-        messagingSenderId: "684291786360",
-        appId: "1:684291786360:web:c8e80a6c8c549587a44f8d",
-        measurementId: "G-VNQSYSVG26"
+        apiKey: "AIzaSyAtJXkXHgMcVCLNPdok7g4uAvMOOg1ZmII",
+        authDomain: "pr15-24afc.firebaseapp.com",
+        databaseURL: "https://pr15-24afc-default-rtdb.firebaseio.com",
+        projectId: "pr15-24afc",
+        storageBucket: "pr15-24afc.appspot.com",
+        messagingSenderId: "209332764887",
+        appId: "1:209332764887:web:3c02024cf77ee9e87d3092",
+        measurementId: "G-SDCTDS6E6H"
       };
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
